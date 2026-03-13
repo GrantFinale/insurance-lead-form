@@ -15,6 +15,7 @@ RUN npx prisma generate
 RUN npx next build
 
 FROM base AS runner
+RUN apk add --no-cache openssl
 WORKDIR /app
 ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
