@@ -7,17 +7,124 @@
 }
 
 @layer components {
-  .btn-primary { @apply bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed; }
-  .btn-secondary { @apply bg-white hover:bg-gray-50 text-gray-700 font-medium py-3 px-8 rounded-lg border border-gray-300 transition-all duration-200; }
-  .btn-accent { @apply bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 shadow-md; }
-  .input-field { @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all duration-200 bg-white; }
-  .card { @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6; }
+  .btn-primary { @apply bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 px-10 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed text-lg; }
+  .btn-secondary { @apply bg-white hover:bg-gray-50 text-gray-700 font-medium py-3 px-8 rounded-xl border border-gray-300 transition-all duration-200; }
+  .btn-accent { @apply bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 shadow-md; }
+  .input-field { @apply w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all duration-200 bg-white text-lg; }
+  .card { @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-6; }
 }
 
-.progress-bar { transition: width 0.5s ease-in-out; }
+/* Progress bar */
+.progress-bar {
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.progress-glow {
+  box-shadow: 0 0 8px rgba(79, 70, 229, 0.4), 0 0 20px rgba(79, 70, 229, 0.15);
+}
 
+/* Slide transitions */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(60px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideOutLeft {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-60px); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-60px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideOutRight {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(60px); }
+}
+
+.slide-in-right { animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.slide-out-left { animation: slideOutLeft 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.slide-in-left { animation: slideInLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.slide-out-right { animation: slideOutRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+/* Fade in */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+
+/* Card selection bounce */
+@keyframes selectBounce {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.04); }
+  60% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+.animate-select-bounce { animation: selectBounce 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+/* Checkmark draw */
+@keyframes checkDraw {
+  0% { stroke-dashoffset: 20; }
+  100% { stroke-dashoffset: 0; }
+}
+.animate-check-draw path {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: checkDraw 0.3s ease-out forwards;
+}
+
+/* Pulse for encouragement text */
+@keyframes gentlePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+.animate-gentle-pulse { animation: gentlePulse 2s ease-in-out infinite; }
+
+/* Confetti */
+@keyframes confetti-fall-1 { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(80px, 400px) rotate(720deg); opacity: 0; } }
+@keyframes confetti-fall-2 { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(-60px, 380px) rotate(-540deg); opacity: 0; } }
+@keyframes confetti-fall-3 { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(120px, 350px) rotate(600deg); opacity: 0; } }
+@keyframes confetti-fall-4 { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(-100px, 420px) rotate(-680deg); opacity: 0; } }
+@keyframes confetti-fall-5 { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(40px, 360px) rotate(500deg); opacity: 0; } }
+@keyframes confetti-fall-6 { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(-130px, 390px) rotate(-620deg); opacity: 0; } }
+@keyframes confetti-fall-7 { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(90px, 370px) rotate(580deg); opacity: 0; } }
+@keyframes confetti-fall-8 { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(-50px, 410px) rotate(-700deg); opacity: 0; } }
+
+.confetti-piece { position: absolute; width: 8px; height: 8px; border-radius: 2px; }
+.confetti-1 { animation: confetti-fall-1 1.5s ease-out forwards; left: 20%; top: 0; background: #6366f1; }
+.confetti-2 { animation: confetti-fall-2 1.4s ease-out forwards; left: 30%; top: 0; background: #10b981; animation-delay: 0.05s; }
+.confetti-3 { animation: confetti-fall-3 1.6s ease-out forwards; left: 40%; top: 0; background: #f59e0b; animation-delay: 0.1s; width: 6px; height: 10px; }
+.confetti-4 { animation: confetti-fall-4 1.3s ease-out forwards; left: 50%; top: 0; background: #ef4444; animation-delay: 0.07s; }
+.confetti-5 { animation: confetti-fall-5 1.5s ease-out forwards; left: 60%; top: 0; background: #8b5cf6; animation-delay: 0.12s; width: 10px; height: 6px; }
+.confetti-6 { animation: confetti-fall-6 1.4s ease-out forwards; left: 70%; top: 0; background: #06b6d4; animation-delay: 0.03s; }
+.confetti-7 { animation: confetti-fall-7 1.6s ease-out forwards; left: 25%; top: 0; background: #f97316; animation-delay: 0.08s; width: 6px; height: 8px; border-radius: 50%; }
+.confetti-8 { animation: confetti-fall-8 1.3s ease-out forwards; left: 75%; top: 0; background: #ec4899; animation-delay: 0.15s; }
+.confetti-9 { animation: confetti-fall-1 1.5s ease-out forwards; left: 45%; top: 0; background: #14b8a6; animation-delay: 0.06s; }
+.confetti-10 { animation: confetti-fall-3 1.4s ease-out forwards; left: 55%; top: 0; background: #6366f1; animation-delay: 0.11s; border-radius: 50%; }
+.confetti-11 { animation: confetti-fall-5 1.5s ease-out forwards; left: 35%; top: 0; background: #f59e0b; animation-delay: 0.04s; }
+.confetti-12 { animation: confetti-fall-7 1.6s ease-out forwards; left: 65%; top: 0; background: #ef4444; animation-delay: 0.09s; width: 6px; height: 10px; }
+
+/* Input valid glow */
+.input-valid {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Keyboard shortcut badge */
+.kbd-badge {
+  @apply inline-flex items-center justify-center w-6 h-6 rounded text-xs font-bold bg-gray-100 text-gray-500 border border-gray-200;
+}
+
+/* Mobile bottom bar */
+@media (max-width: 640px) {
+  .mobile-bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+    z-index: 50;
+  }
+}
