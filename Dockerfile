@@ -12,7 +12,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 RUN npx prisma generate
-RUN npm run build
+RUN npx next build
 
 FROM base AS runner
 WORKDIR /app
