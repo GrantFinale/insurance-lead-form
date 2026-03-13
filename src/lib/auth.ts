@@ -29,10 +29,14 @@ export async function verifyToken(token: string) {
 }
 
 export async function getSession() {
-  const cookieStore = cookies();
-  const token = cookieStore.get("admin_token")?.value;
-  if (!token) return null;
-  return verifyToken(token);
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("admin_token")?.value;
+    if (!token) return null;
+    return verifyToken(token);
+  } catch {
+    return null;
+  }
 }
 
 export async function requireAuth() {

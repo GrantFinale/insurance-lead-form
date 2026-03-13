@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return NextResponse.json({ error: "Unauthorized" }, { status: 401 }); }
   const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
   const limit = parseInt(request.nextUrl.searchParams.get("limit") || "50");
   const status = request.nextUrl.searchParams.get("status");

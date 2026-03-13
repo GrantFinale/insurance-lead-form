@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return NextResponse.json({ error: "Unauthorized" }, { status: 401 }); }
   const typeId = request.nextUrl.searchParams.get("typeId");
   const days = parseInt(request.nextUrl.searchParams.get("days") || "30");
 
