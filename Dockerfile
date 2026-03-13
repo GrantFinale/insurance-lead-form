@@ -1,4 +1,5 @@
-FROM node:20-alpine AS base
+FROM node:20-slim AS base
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 FROM base AS deps
 WORKDIR /app
@@ -15,10 +16,9 @@ RUN npx prisma generate
 RUN npx next build
 
 FROM base AS runner
-RUN apk add --no-cache openssl
 WORKDIR /app
 ENV NODE_ENV=production
-RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
+RUN addgroup --system nodejs && adduser --system --ingroup nodejs nextjs
 RUN npm install -g prisma@5.22.0
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
