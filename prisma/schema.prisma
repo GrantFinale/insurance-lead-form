@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model InsuranceType {
+  id        String   @id @default(cuid())
+  name      String   @unique // auto, home, health, life, business
+  label     String
+  icon      String   @default("shield")
+  enabled   Boolean  @default(true)
+  order     Int      @default(0)
+  steps     Step[]
+  leads     Lead[]
+  routingRules RoutingRule[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Step {
+  id              String        @id @default(cuid())
+  insuranceTypeId String
+  insuranceType   InsuranceType @relation(fields: [insuranceTypeId], references: [id], onDelete: Cascade)
+  title           String
+  description     String?
+  order           Int
+  questions       Question[]
+  events          FunnelEvent[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([insuranceTypeId, order])
+}
+
+model Question {
+  id           String   @id @default(cuid())
+  stepId       String
+  step         Step     @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  label        String
+  fieldName    String
+  fieldType    String   // text, select, radio, checkbox, tel, email, number, date, zip
+  placeholder  String?
+  helpText     String?
+  required     Boolean  @default(true)
+  options      Json?    // for select/radio: [{value, label}]
+  validation   Json?    // {pattern, min, max, minLength, maxLength}
+  order        Int
+  enabled      Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([stepId, order])
+}
+
+model Lead {
+  id              String        @id @default(cuid())
+  sessionId       String
+  insuranceTypeId String
+  insuranceType   InsuranceType @relation(fields: [insuranceTypeId], references: [id])
+  status          String        @default("in_progress") // in_progress, completed, routed, expired
+  data            Json          @default("{}")
+  lastStepReached Int           @default(0)
+  completedAt     DateTime?
+  routedTo        String?       // insurance company name
+  routedAt        DateTime?
+  ipAddress       String?
+  userAgent       String?
+  referrer        String?
+  events          FunnelEvent[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([sessionId])
+  @@index([insuranceTypeId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model FunnelEvent {
+  id        String   @id @default(cuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  stepId    String?
+  step      Step?    @relation(fields: [stepId], references: [id])
+  eventType String   // step_viewed, step_completed, form_abandoned, form_completed, field_focused, field_error
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([leadId])
+  @@index([eventType])
+  @@index([createdAt])
+  @@index([stepId])
+}
+
+model RoutingRule {
+  id              String        @id @default(cuid())
+  insuranceTypeId String
+  insuranceType   InsuranceType @relation(fields: [insuranceTypeId], references: [id], onDelete: Cascade)
+  name            String
+  companyName     String
+  companyEndpoint String?       // webhook URL to send lead to
+  companyEmail    String?       // email to notify
+  priority        Int           @default(0)
+  conditions      Json          @default("[]") // [{field, operator, value}]
+  enabled         Boolean       @default(true)
+  weight          Int           @default(100)  // for weighted distribution
+  dailyCap        Int?          // max leads per day
+  todayCount      Int           @default(0)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([insuranceTypeId])
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+}
